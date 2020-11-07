@@ -67,19 +67,18 @@ const App: () => React$Node = () => {
             <View style={styles.sectionContainer}>
               <Text style={{ fontSize: 25, color: '#808080', marginBottom: 15 }}>Descripción</Text>
               <View style={{
-                flex:1,
-                // flexWrap: "wrap",
-                flexDirection:"column",
-                alignContent:"flex-start"
+                flex: 1,
+                flexDirection: "row",
               }}>
-                <Text>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Accusamus sequi animi eum corrupti, iste dignissimos nemo numquam rem sed aliquam placeat tempora excepturi nobis consequuntur reprehenderit nihil unde. Fuga commodi
-                </Text>
-                <Text>
-                  laboriosam dolore aperiam, sapiente vero dolorum qui atque molestiae eveniet neque enim provident quibusdam amet esse nisi molestias placeat quam sequi voluptates illo eligendi libero iure! Dolorem saepe, quas culpa suscipit sed enim recusandae fugit laudantium fugiat labore quis. Laboriosam sit maiores amet illo atque ipsa exercitationem incidunt facilis consectetur pariatur! Error ad earum iusto. Pariatur numquam veniam architecto earum libero nesciunt totam sed corporis iste, eligendi sequi ad aspernatur.
-              </Text>
-
+                <View style={{ width: '50%' }}>
+                  <Text>
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet perspiciatis mollitia sed blanditiis itaque enim, corrupti commodi porro aperiam modi tempore nobis dolore eaque officiis ullam laborum reiciendis dolorum cum, necessitatibus eligendi qui nulla quos. Inventore, eius iusto. Est, nobis nesciunt. Fugiat temporibus porro numquam asperiores, molestias possimus modi autem.
+                  </Text>
+                </View>
+                <View style={{ width: '50%' }}>
+                  <Text>
+                    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Numquam doloremque sunt rerum inventore? Aspernatur nobis quod sunt praesentium, temporibus iure fugiat dolore corrupti nesciunt voluptate reiciendis numquam nemo eos officia animi neque quo sint! Reiciendis vitae voluptatem esse enim impedit! Accusamus voluptates ut sapiente veritatis est qui harum ex quaerat.                </Text>
+                </View>
               </View>
             </View>
           </View>
