@@ -1,23 +1,13 @@
 import Axios from 'axios';
-import React, { createContext, useContext, useReducer, useState } from 'react';
-import { Alert } from 'react-native';
+import React, {createContext, useContext, useReducer, useState} from 'react';
+import {Alert} from 'react-native';
 
-export const IndicadorContext = createContext();
+export const IndicatorContext = createContext();
 
 const defaultState = {
-  version: "",
-  author: "mindicador.cl",
-  fecha: new Date().toString(),
-  uf: {
-    valor: 0,
-  },
-  ivp: {
-    valor: 0,
-  },
-  
-
-
-
+  fecha: new Date().getDay.toString(),
+  todayData: {},
+  indicadorData: {},
 };
 
 const getLastValue = (currentValue, key) => {
@@ -29,19 +19,25 @@ const getLastValue = (currentValue, key) => {
   return 0;
 };
 
-const countryReducer = (state, action) => {
+const indicatorReducer = (state, action) => {
   switch (action.type) {
-    case 'ADD_COUNTRY': {
+    case 'ADD_INDICATOR': {
       return {
         ...state,
-        country: action.country,
-        slug: action.slug,
+        indicator: action.codigo,
+        valor: action.valor,
       };
     }
-    case 'ADD_COUNTRY_DATA': {
+    case 'ADD_INDICATOR_DATA': {
       return {
         ...state,
-        ...action.countryData,
+        ...action.indicatorData,
+      };
+    }
+    case 'ADD_INDICATOR_SUMMARY_DATA': {
+      return {
+        ...state,
+        todayData: action.todayData,
       };
     }
     default:
@@ -49,8 +45,8 @@ const countryReducer = (state, action) => {
   }
 };
 
-const CountryHandler = ({ children }) => {
-  const [state, dispatch] = useReducer(countryReducer, defaultState);
+const IndicatorHandler = ({children}) => {
+  const [state, dispatch] = useReducer(indicatorReducer, defaultState);
   const [isLoading, updateIsLoading] = useState(false);
 
   const backupData = async () => {
@@ -76,13 +72,13 @@ const CountryHandler = ({ children }) => {
     Alert.alert('Mensaje', '¡Guardado!');
   };
 
-  const fetchData = async (selectCountry) => {
+  const fetchData = async (selectIndicator) => {
     updateIsLoading(true);
     try {
-      const { status, data } = await Axios({
-        baseURL: 'https://api.covid19api.com',
+      const {status, data} = await Axios({
+        baseURL: 'https://mindicador.cl',
         method: 'GET',
-        url: `/country/${selectCountry}`,
+        url: `/api/${selectIndicator}`,
         timeout: 3000,
       });
 
@@ -102,26 +98,55 @@ const CountryHandler = ({ children }) => {
           lineChartActive: data.map((currentValue) => currentValue.Active),
         };
 
-        dispatch({ type: 'ADD_COUNTRY_DATA', countryData });
+        dispatch({type: 'ADD_COUNTRY_DATA', countryData});
       }
     } catch (error) {
-      console.log({ error });
+      console.log({error});
+    }
+    updateIsLoading(false);
+  };
+
+  const fetchSummaryData = async () => {
+    updateIsLoading(true);
+    try {
+      const {status, data} = await Axios({
+        baseURL: 'https://mindicador.cl',
+        method: 'GET',
+        url: '/api',
+        timeout: 3000,
+      });
+
+      console.log('data fetchSummaryData: ', data);
+
+      if (status === 200) {
+        const todayData = {
+          uf: data.uf.valor,
+          dolar: data.dolar.valor,
+          euro: data.euro.valor,
+          libra_cobre: data.libra_cobre.valor,
+          ipc: data.ipc.valor,
+        };
+
+        dispatch({type: 'ADD_INDICATOR_SUMMARY_DATA', todayData});
+      }
+    } catch (error) {
+      console.log('error', {error});
     }
     updateIsLoading(false);
   };
 
   const selectCountry = async (country, slug) => {
     if (country === null) {
-      await dispatch({ type: 'ADD_COUNTRY', country: null, slug: null });
+      await dispatch({type: 'ADD_COUNTRY', country: null, slug: null});
       return;
     }
 
-    await dispatch({ type: 'ADD_COUNTRY', country, slug });
+    await dispatch({type: 'ADD_COUNTRY', country, slug});
     await fetchData(slug);
   };
 
   return (
-    <CountryContext.Provider
+    <IndicatorContext.Provider
       value={{
         state,
         isLoading,
@@ -129,17 +154,17 @@ const CountryHandler = ({ children }) => {
         backupData,
       }}>
       {children}
-    </CountryContext.Provider>
+    </IndicatorContext.Provider>
   );
 };
 
-export default CountryHandler;
+export default IndicatorHandler;
 
-export const useCountryData = () => {
-  const context = useContext(CountryContext);
+export const useIndicatorData = () => {
+  const context = useContext(IndicatorContext);
 
   if (context === undefined) {
-    throw new Error('useCountryData debe ser usado dentro de CountryHandler');
+    throw new Error('useIndicatorData debe ser usado dentro de IndicatorHandler');
   }
 
   return context;

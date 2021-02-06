@@ -1,7 +1,7 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import HomeNavigation from './HomeStack';
-import World from '../screen/World';
+import Summary from '../screen/Summary';
 import {View, StyleSheet, Text} from 'react-native';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontistoIcon from 'react-native-vector-icons/Fontisto';
@@ -23,7 +23,6 @@ const styles = StyleSheet.create({
 const BottomTabs = createBottomTabNavigator();
 
 const HomeTab = ({selectedCountry}) => {
-  console.log('selectedCountry:', selectedCountry);
   const {
     mainTheme: {backgroundColor, textColor},
   } = useTheme();
@@ -56,22 +55,22 @@ const HomeTab = ({selectedCountry}) => {
         }}
       />
       <BottomTabs.Screen
-        name="World"
-        component={World}
+        name="SUMMARY"
+        component={Summary}
         options={{
           tabBarIcon: ({focused, color, size}) => {
             FontistoIcon.loadFont();
             return (
               <View style={styles.icon}>
-                <FontistoIcon name="world" color={color} size={30} />
-                <Text style={{color, marginLeft: 10}}>World</Text>
+                <FontistoIcon name="calendar" color={color} size={30} />
+                <Text style={{color, marginLeft: 10}}>TODAY</Text>
               </View>
             );
           },
         }}
       />
       <BottomTabs.Screen
-        name="Summary"
+        name="CAMERA"
         component={PhotoNavigation}
         options={{
           tabBarIcon: ({focused, color, size}) => {
@@ -104,12 +103,6 @@ const HomeTab = ({selectedCountry}) => {
   );
 };
 
-// const mSTP = (state) => {
-//   return {
-//     selectedCountry: countrySelector(state),
-//   };
-// };
-// mSTP = mapStateToProps
 const mapStateToProps = (state) => ({
   selectedCountry: countrySelector(state),
 });
