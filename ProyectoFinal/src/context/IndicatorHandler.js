@@ -55,7 +55,6 @@ const IndicatorHandler = ({children}) => {
       });
 
       if (status === 200) {
-        console.log('fetchData: ', data);
         const indicatorData = {
           lastValue: getLastValue(data.serie, 'valor'),
           lineChart2020: data.serie.map((currentValue) => currentValue.valor),

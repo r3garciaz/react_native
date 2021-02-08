@@ -10,7 +10,7 @@ export const login = ({user, password}) => {
       type: 'START_LOADING',
     });
 
-    if (user === 'reinaldo' && password === 'scalab') {
+    if (user === 'usuario' && password === 'scalab') {
       const currentSession = new Date().getTime().toString();
       AsyncStorage.setItem('sessionId', currentSession);
       dispatch({
