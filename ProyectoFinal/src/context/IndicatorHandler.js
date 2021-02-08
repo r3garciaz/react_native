@@ -5,13 +5,14 @@ import {Alert} from 'react-native';
 export const IndicatorContext = createContext();
 
 const defaultState = {
-  fecha: new Date().getDate(),
-  summaryData: {},
-  indicadorData: {},
+  nombre: null,
+  codigo: null,
+  lastValue: 0,
+  lineChart2020: [],
 };
 
 const getLastValue = (currentValue, key) => {
-  const lastValue = currentValue.slice(-1);
+  const lastValue = currentValue.slice(0);
 
   if (lastValue.length) {
     return lastValue[0][key];
@@ -24,20 +25,14 @@ const indicatorReducer = (state, action) => {
     case 'ADD_INDICATOR': {
       return {
         ...state,
-        indicator: action.codigo,
-        valor: action.valor,
+        nombre: action.codigo,
+        codigo: action.valor,
       };
     }
     case 'ADD_INDICATOR_DATA': {
       return {
         ...state,
         ...action.indicatorData,
-      };
-    }
-    case 'ADD_INDICATOR_SUMMARY_DATA': {
-      return {
-        ...state,
-        todayData: action.todayData,
       };
     }
     default:
@@ -49,56 +44,24 @@ const IndicatorHandler = ({children}) => {
   const [state, dispatch] = useReducer(indicatorReducer, defaultState);
   const [isLoading, updateIsLoading] = useState(false);
 
-  const backupData = async () => {
-    const {
-      country,
-      totalConfirmed,
-      totalRecovered,
-      totalDeaths,
-      totalActive,
-    } = state;
-    const response = await Axios.post(
-      'https://5f79f3e1e402340016f935ed.mockapi.io/react-native',
-      {
-        datetime: new Date().toISOString(),
-        country,
-        total_confirmed: totalConfirmed,
-        total_recovered: totalRecovered,
-        total_deaths: totalDeaths,
-        total_active: totalActive,
-      },
-    );
-
-    Alert.alert('Mensaje', '¡Guardado!');
-  };
-
   const fetchData = async (selectIndicator) => {
     updateIsLoading(true);
     try {
       const {status, data} = await Axios({
         baseURL: 'https://mindicador.cl',
         method: 'GET',
-        url: `/api/${selectIndicator}`,
+        url: `/api/${selectIndicator}/2021`,
         timeout: 3000,
       });
 
       if (status === 200) {
-        const countryData = {
-          totalConfirmed: getLastValue(data, 'Confirmed'),
-          totalRecovered: getLastValue(data, 'Recovered'),
-          totalDeaths: getLastValue(data, 'Deaths'),
-          totalActive: getLastValue(data, 'Active'),
-          lineChartConfirmed: data.map(
-            (currentValue) => currentValue.Confirmed,
-          ),
-          lineChartRecovered: data.map(
-            (currentValue) => currentValue.Recovered,
-          ),
-          lineChartDeaths: data.map((currentValue) => currentValue.Deaths),
-          lineChartActive: data.map((currentValue) => currentValue.Active),
+        console.log('fetchData: ', data);
+        const indicatorData = {
+          lastValue: getLastValue(data.serie, 'valor'),
+          lineChart2020: data.serie.map((currentValue) => currentValue.valor),
         };
 
-        dispatch({type: 'ADD_COUNTRY_DATA', countryData});
+        dispatch({type: 'ADD_INDICATOR_DATA', indicatorData});
       }
     } catch (error) {
       console.log({error});
@@ -106,43 +69,14 @@ const IndicatorHandler = ({children}) => {
     updateIsLoading(false);
   };
 
-  const fetchSummaryData = async () => {
-    updateIsLoading(true);
-    try {
-      const {status, data} = await Axios({
-        baseURL: 'https://mindicador.cl',
-        method: 'GET',
-        url: '/api',
-        timeout: 3000,
-      });
-
-      console.log('data fetchSummaryData: ', data);
-
-      if (status === 200) {
-        const todayData = {
-          uf: data.uf.valor,
-          dolar: data.dolar.valor,
-          euro: data.euro.valor,
-          libra_cobre: data.libra_cobre.valor,
-          ipc: data.ipc.valor,
-        };
-
-        dispatch({type: 'ADD_INDICATOR_SUMMARY_DATA', todayData});
-      }
-    } catch (error) {
-      console.log('error', {error});
-    }
-    updateIsLoading(false);
-  };
-
-  const selectCountry = async (country, slug) => {
-    if (country === null) {
-      await dispatch({type: 'ADD_COUNTRY', country: null, slug: null});
+  const selectIndicator = async (nombre, codigo) => {
+    if (nombre === null) {
+      await dispatch({type: 'ADD_INDICATOR', nombre: null, codigo: null});
       return;
     }
 
-    await dispatch({type: 'ADD_COUNTRY', country, slug});
-    await fetchData(slug);
+    await dispatch({type: 'ADD_INDICATOR', nombre, codigo});
+    await fetchData(codigo);
   };
 
   return (
@@ -150,8 +84,8 @@ const IndicatorHandler = ({children}) => {
       value={{
         state,
         isLoading,
-        selectCountry,
-        backupData,
+        selectIndicator,
+        // backupData,
       }}>
       {children}
     </IndicatorContext.Provider>

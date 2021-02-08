@@ -8,7 +8,6 @@ import FontistoIcon from 'react-native-vector-icons/Fontisto';
 import colors from '../config/colors';
 import Menu from '../screen/Menu/Menu';
 import {connect} from 'react-redux';
-import {countrySelector} from '../redux/selectors/statisticsSelector';
 import {useTheme} from '../context/Theme';
 import ProfileNavigation from './ProfileStack';
 
@@ -22,7 +21,7 @@ const styles = StyleSheet.create({
 
 const BottomTabs = createBottomTabNavigator();
 
-const HomeTab = ({selectedCountry}) => {
+const HomeTab = () => {
   const {
     mainTheme: {backgroundColor, textColor},
   } = useTheme();
@@ -45,10 +44,12 @@ const HomeTab = ({selectedCountry}) => {
             MaterialCommunityIcon.loadFont();
             return (
               <View style={styles.icon}>
-                <MaterialCommunityIcon name="home" color={color} size={30} />
-                <Text style={{color, marginLeft: 10}}>
-                  {selectedCountry ? selectedCountry : 'Home'}
-                </Text>
+                <MaterialCommunityIcon
+                  name="currency-usd"
+                  color={color}
+                  size={30}
+                />
+                <Text style={{color, marginLeft: -2}}>Indicadores</Text>
               </View>
             );
           },
@@ -103,8 +104,4 @@ const HomeTab = ({selectedCountry}) => {
   );
 };
 
-const mapStateToProps = (state) => ({
-  selectedCountry: countrySelector(state),
-});
-
-export default connect(mapStateToProps)(HomeTab);
+export default HomeTab;

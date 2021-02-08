@@ -8,7 +8,8 @@ const Charts = ({
   navigation,
   route: {
     params: {
-      lineChartConfirmed,
+      lastValue,
+      lineChart2020,
       lineChartRecovered,
       lineChartDeaths,
       lineChartActive,
@@ -24,12 +25,8 @@ const Charts = ({
         paddingTop: top,
       }}>
       <Button title="Volver atrás" onPress={() => navigation.pop()} />
-      <LineChartData
-        data={lineChartConfirmed}
-        color={colors.blue}
-        title="Confirmados"
-      />
-      <LineChartData
+      <LineChartData data={lineChart2020} color={colors.blue} title="Gráfica" />
+      {/* <LineChartData
         data={lineChartRecovered}
         color={colors.green}
         title="Recuperados"
@@ -43,7 +40,7 @@ const Charts = ({
         data={lineChartActive}
         color={colors.yellow}
         title="Activos"
-      />
+      /> */}
     </ScrollView>
   );
 };

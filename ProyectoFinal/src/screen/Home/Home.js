@@ -9,7 +9,8 @@ import colors from '../../config/colors';
 import Loading from '../../components/Commons/Loading';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {capitalize} from '../../utils';
-import {useCountryData} from '../../context/CountryHandler';
+// import {useCountryData} from '../../context/CountryHandler';
+import {useIndicatorData} from '../../context/IndicatorHandler';
 import {useTheme} from '../../context/Theme';
 
 const styles = StyleSheet.create({
@@ -28,19 +29,22 @@ const Home = ({navigation}) => {
   } = useTheme();
   const {
     state: {
-      country,
+      nombre,
+      codigo,
       isLoading,
-      totalConfirmed,
-      totalDeaths,
-      totalRecovered,
-      totalActive,
-      lineChartConfirmed,
-      lineChartDeaths,
-      lineChartRecovered,
-      lineChartActive,
+      lastValue,
+      lineChart2020,
+      // totalConfirmed,
+      // totalDeaths,
+      // totalRecovered,
+      // totalActive,
+      // lineChartConfirmed,
+      // lineChartDeaths,
+      // lineChartRecovered,
+      // lineChartActive,
     },
-    backupData,
-  } = useCountryData();
+    // backupData,
+  } = useIndicatorData();
 
   useEffect(() => {
     IconFeather.loadFont();
@@ -49,27 +53,28 @@ const Home = ({navigation}) => {
   return (
     <View style={[styles.container, {backgroundColor, paddingTop: top}]}>
       <Text style={[styles.title, {color: textColor}]}>
-        {capitalize(country)}
+        {capitalize(nombre)}
       </Text>
 
-      <Button title="backup data" onPress={() => backupData()} />
+      {/* <Button title="backup data" onPress={() => backupData()} /> */}
 
       <Loading isLoading={isLoading} color={colors.white}>
         <TotalData
-          totalConfirmed={totalConfirmed}
-          totalRecovered={totalRecovered}
-          totalDeaths={totalDeaths}
-          totalActive={totalActive}
+            lastValue = {lastValue}
+          // totalConfirmed={totalConfirmed}
+          // totalRecovered={totalRecovered}
+          // totalDeaths={totalDeaths}
+          // totalActive={totalActive}
         />
       </Loading>
       <Button
         color={textColor}
         onPress={() =>
           navigation.navigate('Charts', {
-            lineChartConfirmed,
-            lineChartRecovered,
-            lineChartDeaths,
-            lineChartActive,
+            lineChart2020,
+          //   lineChartRecovered,
+          //   lineChartDeaths,
+          //   lineChartActive,
           })
         }
         title="Ir a Charts"

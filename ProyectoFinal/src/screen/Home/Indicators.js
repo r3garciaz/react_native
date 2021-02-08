@@ -13,7 +13,7 @@ import {useAsyncStorage} from '@react-native-async-storage/async-storage';
 import Axios from 'axios';
 import * as Animatable from 'react-native-animatable'; // https://github.com/oblador/react-native-animatable
 import {useTheme} from '../../context/Theme';
-import { useCountryData } from '../../context/CountryHandler';
+import {useIndicatorData} from '../../context/IndicatorHandler';
 
 // import {useCountryData} from '../../context/CountryHandler';
 
@@ -50,72 +50,85 @@ const styles = StyleSheet.create({
   },
 });
 
-const Countries = ({navigation}) => {
-  const [countries, updateCountries] = useState([]);
-  const [searchCountry, updateSearchCountry] = useState([]);
+const Indicators = ({navigation}) => {
+  const [indicators, updateIndicators] = useState([]);
+  const [searchIndicator, updateSearchIndicator] = useState([]);
   const {
     mainTheme: {backgroundColor, textColor},
   } = useTheme();
+
   const {
-    getItem: getCountryesItems,
-    setItem: setCountriesItems,
-  } = useAsyncStorage('countries');
-  const {selectCountry} = useCountryData();
+    getItem: getIndicatorsItems,
+    setItem: setIndicatorsItems,
+  } = useAsyncStorage('@indicators:key');
+
+  const {selectIndicator} = useIndicatorData();
   const {top} = useSafeAreaInsets();
 
-  const getFromStorage = async () => JSON.stringify(await getCountryesItems);
+  const getFromStorage = async () => JSON.stringify(await getIndicatorsItems);
 
-  const filterCountries = useCallback(
+  const filterIndicators = useCallback(
     (searchText) => {
       if (searchText) {
-        const result = countries.filter((country) =>
-          country.Country.includes(searchText),
+        const result = indicators.filter((indicador) =>
+          indicador.Nombre.includes(searchText),
         );
-        updateSearchCountry(result);
+        updateSearchIndicator(result);
       } else {
-        updateSearchCountry(countries);
+        updateSearchIndicator(indicators);
       }
     },
-    [countries],
+    [indicators],
   );
 
-  const fetchCountries = useCallback(async () => {
+  const fetchIndicators = useCallback(async () => {
     try {
-      const {status, data} = await Axios.get(
-        'https://api.covid19api.com/countries',
-      );
+      const {status, data} = await Axios.get('https://mindicador.cl/api');
       if (status === 200) {
-        const orderedCountries = data.sort((a, b) => a.Country > b.Country);
-        if (orderedCountries) {
-          await setCountriesItems(JSON.stringify(orderedCountries));
+        const resultArray = [];
+        Object.entries(data).forEach((value) => {
+          if (value[1].codigo) {
+            resultArray.push({
+              Codigo: value[1].codigo,
+              Nombre: value[1].nombre,
+            });
+          }
+        });
+        const orderedIndicators = resultArray.sort((a, b) =>
+          a.Nombre.localeCompare(b.Nombre),
+        );
+        if (orderedIndicators) {
+          await setIndicatorsItems(JSON.stringify(orderedIndicators));
         }
-        updateCountries(orderedCountries || getFromStorage());
-        updateSearchCountry(orderedCountries);
+        updateIndicators(orderedIndicators || getFromStorage());
+        updateSearchIndicator(orderedIndicators);
       }
     } catch (error) {
-      updateCountries([]);
+      updateIndicators([]);
     }
   }, []);
 
   useEffect(() => {
-    fetchCountries();
-  }, [fetchCountries]);
+    fetchIndicators();
+  }, [fetchIndicators]);
 
   return (
     <View style={[styles.container, {paddingTop: top, backgroundColor}]}>
-      <Text style={[styles.title, {color: textColor}]}>Selecciona un país</Text>
+      <Text style={[styles.title, {color: textColor}]}>
+        Selecciona un indicador
+      </Text>
       <View style={styles.inputContainer}>
         <TextInput
-          placeholder="Buscar país..."
+          placeholder="Buscar indicador..."
           placeholderTextColor={colors.gray}
           style={styles.textInput}
-          onChangeText={filterCountries}
+          onChangeText={filterIndicators}
         />
       </View>
       <FlatList
-        data={searchCountry}
-        keyExtractor={(item) => item.Slug}
-        renderItem={({item: {Slug, Country}}) => {
+        data={searchIndicator}
+        keyExtractor={(item) => item.Codigo}
+        renderItem={({item: {Codigo, Nombre}}) => {
           const fadeIn = {
             0: {
               opacity: 0,
@@ -134,14 +147,14 @@ const Countries = ({navigation}) => {
           return (
             <TouchableOpacity
               onPress={() => {
-                selectCountry(Country, Slug);
+                selectIndicator(Nombre, Codigo);
                 navigation.navigate('Home');
               }}
               style={styles.countryContainer}>
               <Animatable.Text
                 style={[styles.country, {color: textColor}]}
                 animation={fadeIn}>
-                {Country}
+                {Nombre}
               </Animatable.Text>
             </TouchableOpacity>
           );
@@ -151,4 +164,4 @@ const Countries = ({navigation}) => {
   );
 };
 
-export default Countries;
+export default Indicators;

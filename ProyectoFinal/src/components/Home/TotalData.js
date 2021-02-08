@@ -18,6 +18,7 @@ const styles = StyleSheet.create({
 });
 
 const TotalData = ({
+  lastValue = 0,
   totalConfirmed = 0,
   totalDeaths = 0,
   totalRecovered = 0,
@@ -27,24 +28,9 @@ const TotalData = ({
     <Text style={styles.title}>Total</Text>
     <View style={styles.container}>
       <Box
-        variableData={totalConfirmed}
-        variableName="Confirmados"
+        variableData={lastValue}
+        variableName="Valor del día"
         color={colors.blue}
-      />
-      <Box
-        variableData={totalRecovered}
-        variableName="Recuperados"
-        color={colors.green}
-      />
-      <Box
-        variableData={totalDeaths}
-        variableName="Fallecidos"
-        color={colors.red}
-      />
-      <Box
-        variableData={totalActive}
-        variableName="Activos"
-        color={colors.yellow}
       />
     </View>
   </>
