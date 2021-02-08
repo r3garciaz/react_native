@@ -23,16 +23,12 @@ class Summary extends Component {
 
     this.state = {
       currentData: [],
-      countries: [],
-      selectedCountry: '',
-      indicator: '',
       dateData: new Date().getDay(),
       isLoading: false,
     };
   }
 
   componentDidMount = () => {
-    this.getFromStorage();
     this.fetchSummaryData();
   };
 
@@ -41,15 +37,8 @@ class Summary extends Component {
     const {dateData: lastDate} = prevState;
 
     if (lastDate !== currentDate) {
-      this.fetchData(currentDate);
+      this.fetchSummaryData();
     }
-  };
-
-  getFromStorage = async () => {
-    const formattedCountries = JSON.parse(
-      await AsyncStorage.getItem('countries'),
-    );
-    this.setState({countries: formattedCountries || []});
   };
 
   fetchSummaryData = async () => {
@@ -59,11 +48,12 @@ class Summary extends Component {
         baseURL: 'https://mindicador.cl',
         method: 'GET',
         url: '/api',
-        timeout: 10000,
+        timeout: 5000,
       });
 
       if (status === 200) {
         this.setState({currentData: data});
+        this.setState({currentDate: new Date(data.fecha).getDate()});
       }
     } catch (error) {
       console.log({error});
@@ -72,17 +62,6 @@ class Summary extends Component {
 
     this.setState({isLoading: false});
   };
-
-  getLastValue = (currentValue, key) => {
-    const lastValue = currentValue.slice(-1);
-
-    if (lastValue.length) {
-      return lastValue[0][key];
-    }
-    return 0;
-  };
-
-  selectCountry = ({value}) => this.setState({selectedCountry: value});
 
   render() {
     const {currentData, isLoading} = this.state;
@@ -107,7 +86,7 @@ class Summary extends Component {
             <Button
             title="Refrescar"
             onPress={() => this.fetchSummaryData()}
-            color={colors.yellow}
+            color={textColor}
           />
             <Loading isLoading={isLoading} color={colors.white}>
               <SummaryData

@@ -1,7 +1,6 @@
 import React, {useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import Screen from './TestStack';
 import HomeTab from './BottomTabStack';
 import Login from '../screen/Login/Login';
 import {connect} from 'react-redux';
@@ -23,10 +22,7 @@ const RootNavigation = ({loggedIn, isCurrentlyLoggedIn}) => {
     <NavigationContainer>
       <RootStack.Navigator headerMode="none">
         {loggedIn ? (
-          <>
             <RootStack.Screen name="Tabs" component={HomeTab} />
-            <RootStack.Screen name="Screens" component={Screen} />
-          </>
         ) : (
           <RootStack.Screen name="Login" component={Login} />
         )}

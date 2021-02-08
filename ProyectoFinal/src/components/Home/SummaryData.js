@@ -1,6 +1,7 @@
 import React from 'react';
 import {Text, View, StyleSheet} from 'react-native';
 import colors from '../../config/colors';
+import { useTheme } from '../../context/Theme';
 import Box from './Box';
 
 const styles = StyleSheet.create({
@@ -18,37 +19,34 @@ const styles = StyleSheet.create({
   },
 });
 
-const SummaryData = ({uf = 0, dolar = 0, euro = 0, ipc = 0, libra_cobre = 0}) => (
+const SummaryData = ({
+  uf = 0,
+  dolar = 0,
+  euro = 0,
+  ipc = 0,
+  libra_cobre = 0,
+}) => {
+  const {
+    mainTheme: {textColor},
+  } = useTheme();
+
+  return (
   <>
-    <Text style={styles.title}>Resumen Indicadores de hoy</Text>
+      <Text style={[styles.title, {color: textColor}]}>
+        Resumen Indicadores de hoy
+      </Text>
     <View style={styles.container}>
+      <Box variableData={uf} variableName="UF" color={colors.blue} />
+      <Box variableData={dolar} variableName="Dólar" color={colors.green} />
+      <Box variableData={euro} variableName="Euro" color={colors.red} />
+      <Box variableData={ipc} variableName="IPC" color={colors.yellow} />
       <Box
-        variableData={uf}
-        variableName="UF"
-        color={colors.blue}
-      />
-      <Box
-        variableData={dolar}
-        variableName="Dólar"
-        color={colors.green}
-      />
-      <Box
-        variableData={euro}
-        variableName="Euro"
-        color={colors.red}
-      />
-      <Box
-        variableData={ipc}
-        variableName="IPC"
-        color={colors.yellow}
-      />
-    <Box
         variableData={libra_cobre}
         variableName="Libra de Cobre"
         color={colors.orange}
       />
     </View>
   </>
-);
+  )};
 
 export default SummaryData;

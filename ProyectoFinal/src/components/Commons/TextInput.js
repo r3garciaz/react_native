@@ -29,6 +29,7 @@ const TextInput = ({
   placeholder,
   type = 'default',
   labelTag,
+  autoCapitalize = 'sentences',
   onChange = () => {},
 }) => {
   const {
@@ -44,6 +45,7 @@ const TextInput = ({
           style={styles.textInput}
           placeholder={placeholder}
           keyboardType={type}
+          autoCapitalize={autoCapitalize}
           onChangeText={onChange}
         />
       </View>

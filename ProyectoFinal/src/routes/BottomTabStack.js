@@ -10,7 +10,7 @@ import Menu from '../screen/Menu/Menu';
 import {connect} from 'react-redux';
 import {countrySelector} from '../redux/selectors/statisticsSelector';
 import {useTheme} from '../context/Theme';
-import PhotoNavigation from './PhotoStack';
+import ProfileNavigation from './ProfileStack';
 
 const styles = StyleSheet.create({
   icon: {
@@ -63,22 +63,22 @@ const HomeTab = ({selectedCountry}) => {
             return (
               <View style={styles.icon}>
                 <FontistoIcon name="calendar" color={color} size={30} />
-                <Text style={{color, marginLeft: 10}}>TODAY</Text>
+                <Text style={{color, marginLeft: 10}}>Hoy</Text>
               </View>
             );
           },
         }}
       />
       <BottomTabs.Screen
-        name="CAMERA"
-        component={PhotoNavigation}
+        name="PERFIL"
+        component={ProfileNavigation}
         options={{
           tabBarIcon: ({focused, color, size}) => {
             FontistoIcon.loadFont();
             return (
               <View style={styles.icon}>
-                <FontistoIcon name="camera" color={color} size={25} />
-                <Text style={{color, marginLeft: 10}}>Cámara</Text>
+                <FontistoIcon name="person" color={color} size={25} />
+                <Text style={{color, marginLeft: 10}}>Perfil</Text>
               </View>
             );
           },

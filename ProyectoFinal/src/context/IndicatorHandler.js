@@ -5,8 +5,8 @@ import {Alert} from 'react-native';
 export const IndicatorContext = createContext();
 
 const defaultState = {
-  fecha: new Date().getDay.toString(),
-  todayData: {},
+  fecha: new Date().getDate(),
+  summaryData: {},
   indicadorData: {},
 };
 

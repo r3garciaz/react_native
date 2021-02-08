@@ -5,6 +5,7 @@ export const UserContext = React.createContext();
 const UserHandler = ({children}) => {
   const [name, updateName] = useState('');
   const [email, updateEmail] = useState('');
+  const [phono, updatePhono] = useState('');
   const [photo, updatePhoto] = useState(null);
 
   return (
@@ -14,6 +15,8 @@ const UserHandler = ({children}) => {
         updateName,
         email,
         updateEmail,
+        phono,
+        updatePhono,
         photo,
         updatePhoto,
       }}>
@@ -29,6 +32,8 @@ type IUser = {
   updateName?: Function,
   email?: String,
   updateEmail?: Function,
+  phono: String,
+  updatePhono: Function,
   photo?: String,
   updatePhoto?: Function,
 };
