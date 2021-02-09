@@ -15,8 +15,6 @@ import * as Animatable from 'react-native-animatable'; // https://github.com/obl
 import {useTheme} from '../../context/Theme';
 import {useIndicatorData} from '../../context/IndicatorHandler';
 
-// import {useCountryData} from '../../context/CountryHandler';
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

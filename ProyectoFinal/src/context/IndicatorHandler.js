@@ -8,7 +8,10 @@ const defaultState = {
   nombre: null,
   codigo: null,
   lastValue: 0,
+  lineChart2021: [],
   lineChart2020: [],
+  lineChart2019: [],
+  lineChart2018: [],
 };
 
 const getLastValue = (currentValue, key) => {
@@ -46,22 +49,31 @@ const IndicatorHandler = ({children}) => {
 
   const fetchData = async (selectIndicator) => {
     updateIsLoading(true);
+    let indicatorData = {
+      lastValue: 0,
+      lineChart2021: [],
+      lineChart2020: [],
+      lineChart2019: [],
+      lineChart2018: [],
+    };
+    console.log('indicador:', indicatorData);
     try {
-      const {status, data} = await Axios({
-        baseURL: 'https://mindicador.cl',
-        method: 'GET',
-        url: `/api/${selectIndicator}/2021`,
-        timeout: 3000,
-      });
+      for (var i = 2018; i <= 2021; i++) {
+        const {status, data} = await Axios({
+          baseURL: 'https://mindicador.cl',
+          method: 'GET',
+          url: `/api/${selectIndicator}/2021`,
+          timeout: 3000,
+        });
 
-      if (status === 200) {
-        const indicatorData = {
-          lastValue: getLastValue(data.serie, 'valor'),
-          lineChart2020: data.serie.map((currentValue) => currentValue.valor),
-        };
-
-        dispatch({type: 'ADD_INDICATOR_DATA', indicatorData});
+        if (status === 200) {
+          indicatorData.lastValue = getLastValue(data.serie, 'valor');
+          indicatorData[`lineChart${i}`] = data.serie.map(
+            (currentValue) => currentValue.valor,
+          );
+        }
       }
+      dispatch({type: 'ADD_INDICATOR_DATA', indicatorData});
     } catch (error) {
       console.log({error});
     }
@@ -97,7 +109,9 @@ export const useIndicatorData = () => {
   const context = useContext(IndicatorContext);
 
   if (context === undefined) {
-    throw new Error('useIndicatorData debe ser usado dentro de IndicatorHandler');
+    throw new Error(
+      'useIndicatorData debe ser usado dentro de IndicatorHandler',
+    );
   }
 
   return context;

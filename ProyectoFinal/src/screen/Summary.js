@@ -84,10 +84,10 @@ class Summary extends Component {
               {backgroundColor, paddingTop: insets.top},
             ]}>
             <Button
-            title="Refrescar"
-            onPress={() => this.fetchSummaryData()}
-            color={textColor}
-          />
+              title="Refrescar"
+              onPress={() => this.fetchSummaryData()}
+              color={textColor}
+            />
             <Loading isLoading={isLoading} color={colors.white}>
               <SummaryData
                 uf={uf}

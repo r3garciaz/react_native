@@ -25,7 +25,15 @@ const Home = ({navigation}) => {
     darkModeEnabled,
   } = useTheme();
   const {
-    state: {nombre, isLoading, lastValue, lineChart2020},
+    state: {
+      nombre,
+      isLoading,
+      lastValue,
+      lineChart2018,
+      lineChart2019,
+      lineChart2020,
+      lineChart2021,
+    },
   } = useIndicatorData();
 
   useEffect(() => {
@@ -45,7 +53,10 @@ const Home = ({navigation}) => {
         color={darkModeEnabled ? backgroundColor : textColor}
         onPress={() =>
           navigation.navigate('Charts', {
+            lineChart2018,
+            lineChart2019,
             lineChart2020,
+            lineChart2021,
           })
         }
         title="Ver gráfico"
