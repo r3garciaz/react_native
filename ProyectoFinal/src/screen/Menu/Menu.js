@@ -37,6 +37,12 @@ const styles = StyleSheet.create({
     height: 200,
     width: 200,
   },
+  view: {
+    alignItems: 'center',
+  },
+  switch: {
+    marginTop: 10,
+  },
 });
 
 const Menu = ({logout}) => {
@@ -62,13 +68,17 @@ const Menu = ({logout}) => {
           <Text style={{color: textColor}}>{email}</Text>
         </View>
       </View>
-      <Switch
-        trackColor={{false: colors.white, true: colors.gray}}
-        thumbColor={darkModeEnabled ? colors.black : colors.white}
-        ios_backgroundColor={colors.white}
-        onValueChange={toggleDarkMode}
-        value={darkModeEnabled}
-      />
+      <View style={styles.view}>
+        <Text style={{color: textColor}}>Modo Oscuro</Text>
+        <Switch
+          style={styles.switch}
+          trackColor={{false: colors.gray, true: colors.gray}}
+          thumbColor={darkModeEnabled ? colors.white : colors.black}
+          ios_backgroundColor={colors.white}
+          onValueChange={toggleDarkMode}
+          value={darkModeEnabled}
+        />
+      </View>
       <TouchableOpacity onPress={logout} style={styles.button}>
         <AntDesignIcon name="logout" color={textColor} size={30} />
         <Text style={[styles.text, {color: textColor}]}>Logout</Text>

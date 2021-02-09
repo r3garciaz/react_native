@@ -1,15 +1,11 @@
-import React, {Component, useEffect, useMemo, useState} from 'react';
-import {View, Button, Text, ScrollView, StyleSheet, Alert} from 'react-native';
-import axios from 'axios';
+import React, {useEffect} from 'react';
+import {View, Button, Text, StyleSheet} from 'react-native';
 import TotalData from '../../components/Home/TotalData';
-import DropdownPicker from '../../components/Commons/DropdownPicker';
 import IconFeather from 'react-native-vector-icons/Feather';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import colors from '../../config/colors';
 import Loading from '../../components/Commons/Loading';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {capitalize} from '../../utils';
-// import {useCountryData} from '../../context/CountryHandler';
 import {useIndicatorData} from '../../context/IndicatorHandler';
 import {useTheme} from '../../context/Theme';
 
@@ -26,24 +22,10 @@ const Home = ({navigation}) => {
   const {top} = useSafeAreaInsets();
   const {
     mainTheme: {backgroundColor, textColor},
+    darkModeEnabled,
   } = useTheme();
   const {
-    state: {
-      nombre,
-      codigo,
-      isLoading,
-      lastValue,
-      lineChart2020,
-      // totalConfirmed,
-      // totalDeaths,
-      // totalRecovered,
-      // totalActive,
-      // lineChartConfirmed,
-      // lineChartDeaths,
-      // lineChartRecovered,
-      // lineChartActive,
-    },
-    // backupData,
+    state: {nombre, isLoading, lastValue, lineChart2020},
   } = useIndicatorData();
 
   useEffect(() => {
@@ -56,28 +38,18 @@ const Home = ({navigation}) => {
         {capitalize(nombre)}
       </Text>
 
-      {/* <Button title="backup data" onPress={() => backupData()} /> */}
-
       <Loading isLoading={isLoading} color={colors.white}>
-        <TotalData
-            lastValue = {lastValue}
-          // totalConfirmed={totalConfirmed}
-          // totalRecovered={totalRecovered}
-          // totalDeaths={totalDeaths}
-          // totalActive={totalActive}
-        />
+        <TotalData lastValue={lastValue} />
       </Loading>
       <Button
-        color={textColor}
+        color={darkModeEnabled ? backgroundColor : textColor}
         onPress={() =>
           navigation.navigate('Charts', {
             lineChart2020,
-          //   lineChartRecovered,
-          //   lineChartDeaths,
-          //   lineChartActive,
           })
         }
-        title="Ir a Charts"
+        title="Ver gráfico"
+        textColor={darkModeEnabled ? textColor : backgroundColor}
       />
     </View>
   );
